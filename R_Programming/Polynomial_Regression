@@ -1,0 +1,51 @@
+# setting up directory and loading the dataframe
+
+dataset <- read.csv('D:/Jitesh_Drive/machine_learning/Regression/Polynomial Regression/Position_Salaries.csv')
+View(dataset)
+
+# droping first column since we dont need it.
+dataset <- dataset[2:3]
+
+#Fitting linear regression as baseline model to check the accuracy.
+lin_reg <- lm(formula = dataset$Salary~.,data = dataset)
+summary(lin_reg)
+
+#Fitting Polynomial regression as baseline model to check the accuracy.
+dataset$Level2 <- dataset$Level^2
+dataset$Level3 <- dataset$Level^3
+dataset$Level4 <- dataset$Level^4
+
+poly_reg <- lm(formula = dataset$Salary~.,data = dataset)
+summary(poly_reg)
+
+#Visualizing the linear regression plot
+library(ggplot2)
+ggplot() + 
+  geom_point(aes(x = dataset$Level,y =dataset$Salary,
+                 colour = 'red' )) +
+geom_line(aes(x = dataset$Level,y =predict(lin_reg,newdata =dataset),
+               colour = 'blue' )) +
+  
+ggtitle('Actual VS predicted ')
+
+
+#Visualizing the polynomial regression plot
+ggplot() + 
+  geom_point(aes(x = dataset$Level,y =dataset$Salary,
+                 colour = 'red' )) +
+  geom_line(aes(x = dataset$Level,y =predict(poly_reg,newdata =dataset),
+                colour = 'blue' )) +
+  
+ggtitle('Actual VS predicted ')
+
+
+# Predicting a new result with linear regression
+y_pred <- predict(lin_reg,data.frame(Level = 6.5))
+
+
+# Predicting a new result with Polynomial regression
+y_pred <- predict(poly_reg,data.frame(Level = 6.5,
+                                      Level2 = 6.5^2,
+                                      Level3 = 6.5^3,
+                                      Level4 = 6.5^4))
+
